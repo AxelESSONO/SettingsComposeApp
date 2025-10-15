@@ -16,7 +16,6 @@
 11. Bonus — Thème & Dark mode
 12. Code final
 13. Livrables et exercices pour les étudiants
-14. Captures d'écran (TODO)
 
 ---
 
