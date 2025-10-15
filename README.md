@@ -1,8 +1,4 @@
-# TP Android Jetpack Compose — SettingsComposeApp
-
-**Durée estimée :** 1h15 – 1h30 (atelier pratique)
-**Niveau :** Intermédiaire
-**Langue :** Français
+# Android Jetpack Compose — SettingsComposeApp
 
 ---
 
