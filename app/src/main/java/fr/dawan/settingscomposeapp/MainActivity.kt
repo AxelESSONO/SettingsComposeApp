@@ -13,11 +13,13 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,6 +38,7 @@ import fr.dawan.settingscomposeapp.ui.screens.HomeScreen
 import fr.dawan.settingscomposeapp.ui.screens.SettingsScreen
 import fr.dawan.settingscomposeapp.ui.theme.SettingsComposeAppTheme
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.collectAsState
 
 class MainActivity : ComponentActivity() {
 
@@ -52,9 +55,21 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
-            val snackbarHostState = remember { SnackbarHostState() }
-            SettingsComposeAppTheme {
+
+           // val snackbarHostState = remember { SnackbarHostState() }
+
+            val uiState = viewModel.uiState.collectAsState().value
+            // Passe darkTheme selon le choix de l'utilisateur
+            val isDark = when (uiState.theme) {
+                "light" -> false
+                "dark" -> true
+                else -> false
+            }
+
+            SettingsComposeAppTheme(
+                darkTheme = isDark,
+                textScale = uiState.textScale
+            ) {
                 val navController = rememberNavController()
                 MainScreen(
                     navController = navController,
@@ -72,7 +87,6 @@ fun MainScreen(
     dataStoreManager: DataStoreManager,
     viewModel: SettingsViewModel
 ) {
-    val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -114,14 +128,15 @@ fun NavGraph(
     {
         composable("home") {
             HomeScreen(
-                navController = navController,
-                dataStoreManager = dataStoreManager
+                navController = navController
             )
         }
         composable("settings") {
             SettingsScreen(viewModel = viewModel)
         }
         composable("detail/{itemId}") { backStackEntry ->
+
+            // Recupere l'id de l'item depuis les arguments de la route
             val itemId = backStackEntry.arguments?.getString("itemId")
             DetailScreen(itemId = itemId)
         }
@@ -136,6 +151,9 @@ fun AppTopBar(
 ) {
     // SmallTopAppBar est dans version ancienne Material 3
     TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.secondary
+        ),
         title = { Text("SettingsComposeApp") },
         actions = {
             IconButton(onClick = onShareClick) {

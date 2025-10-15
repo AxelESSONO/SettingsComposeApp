@@ -20,13 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import fr.dawan.settingscomposeapp.data.dataStore.DataStoreManager
 
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    dataStoreManager: DataStoreManager
+    navController: NavController
 ) {
     val items = List(12) { "Item #$it" }
 
@@ -40,7 +39,12 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(8.dp)
                     .combinedClickable(
-                        onClick = { navController.navigate("detail/$index") },
+                        onClick = {
+
+                            // Naviguer vers l'écran de détail
+                            // Envoi de l'index de l'élément detail/$index
+                            navController.navigate("detail/$index")
+                        },
                         onLongClick = { showMenu = true }
                     )
             ) {
@@ -55,7 +59,12 @@ fun HomeScreen(
                             onDismissRequest = { showMenu = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Favoris") },
+                                text = {
+                                    Text(
+                                        text = "Favoris",
+                                        fontSize = 25.sp
+                                    )
+                                },
                                 onClick = { /* marquer favoris */ }
                             )
                             DropdownMenuItem(
@@ -65,7 +74,8 @@ fun HomeScreen(
                             DropdownMenuItem(
                                 text = { Text("Partager") },
                                 onClick = {
-                                    Toast.makeText(context, "Partager $item", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Partager $item", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             )
                         }
